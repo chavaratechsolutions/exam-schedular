@@ -87,9 +87,9 @@ export default function LoginPage() {
             {/* Form Header */}
             <div className="text-center mb-10">
               <h2 className="text-4xl font-black text-gray-800 tracking-tight mb-2">Sign in</h2>
-              <p className="text-xs font-semibold text-gray-400">
+              {/* <p className="text-xs font-semibold text-gray-400">
                 Lorem ipsum dolor sit amet, consectetuer adipiscing elit
-              </p>
+              </p> */}
             </div>
 
             {error && (
