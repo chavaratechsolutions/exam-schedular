@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Bell, Grid, User, ChevronDown, ChevronLeft, ChevronRight, Menu } from "lucide-react";
+import { Bell, Grid, User, ChevronDown, ChevronLeft, ChevronRight, Menu, CheckSquare } from "lucide-react";
 import { format, setMonth, setYear } from "date-fns";
 import { useAuth } from "../../context/AuthContext";
 
@@ -21,6 +21,7 @@ export default function CalendarHeader({
   onDateChange,
   onPrev,
   onNext,
+  onToday,
   view,
   onViewChange,
   isMultiSelectMode,
@@ -94,6 +95,14 @@ export default function CalendarHeader({
 
       {/* Middle: Date Navigation & Dropdowns */}
       <div className="flex items-center justify-center gap-1 sm:gap-3 flex-1 md:flex-none">
+        {/* Today Button */}
+        <button
+          onClick={onToday}
+          className="mr-1 sm:mr-2 px-3 sm:px-4 py-2 rounded-[16px] text-xs sm:text-sm font-bold bg-[#F5F6F8] text-gray-600 hover:bg-gray-200 transition-all"
+        >
+          Today
+        </button>
+
         {/* Navigation Arrows */}
         <button onClick={onPrev} className="p-2 rounded-full hover:bg-gray-100 text-gray-600">
           <ChevronLeft className="w-5 h-5" />
@@ -166,13 +175,17 @@ export default function CalendarHeader({
         {onToggleMultiSelect && (
           <button
             onClick={onToggleMultiSelect}
-            className={`hidden md:block ml-2 px-4 py-2 rounded-[16px] text-sm font-bold transition-all ${
+            className={`ml-1 sm:ml-2 p-2 md:px-4 md:py-2 rounded-[16px] text-sm font-bold transition-all flex items-center gap-2 ${
               isMultiSelectMode
                 ? "bg-[#EF4444] text-white shadow-[0_4px_12px_-4px_rgba(239,68,68,0.6)]"
                 : "bg-[#F5F6F8] text-gray-600 hover:bg-gray-200"
             }`}
+            title={isMultiSelectMode ? "Cancel Selection" : "Select Multiple Days"}
           >
-            {isMultiSelectMode ? "Cancel Selection" : "Select Multiple Days"}
+            <CheckSquare className="w-5 h-5 md:hidden" />
+            <span className="hidden md:inline">
+              {isMultiSelectMode ? "Cancel Selection" : "Select Multiple Days"}
+            </span>
           </button>
         )}
       </div>

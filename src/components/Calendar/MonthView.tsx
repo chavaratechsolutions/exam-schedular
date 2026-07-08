@@ -81,22 +81,22 @@ export default function MonthView({ currentDate, exams, onDateClick, onEventClic
           </div>
 
           {hasExams && !isMultiSelectMode && (
-            <div className="hidden md:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[115%] bg-white border border-red-200 rounded-[24px] shadow-2xl z-50 flex-col p-4 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 scale-95 group-hover:scale-100 h-fit">
-               <div className="text-center font-black text-lg text-[#EF4444] mb-3">{formattedDate}</div>
+            <div className="hidden md:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[145%] bg-white border border-red-200 rounded-[24px] shadow-2xl z-50 flex-col p-5 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 scale-95 group-hover:scale-100 h-fit">
+               <div className="text-center font-black text-xl text-[#EF4444] mb-3">{formattedDate}</div>
                <div className="flex-1 overflow-visible flex flex-col gap-2">
                   {dayExams.map(exam => (
                     <div 
                       key={`hover-${exam.id}`} 
                       onClick={(e) => { e.stopPropagation(); onEventClick(exam); }}
-                      className="bg-red-50 p-3 rounded-[16px] flex flex-col gap-1.5 border border-red-100 hover:bg-red-100 transition-colors cursor-pointer"
+                      className="bg-red-50 p-4 rounded-[16px] flex flex-col gap-2 border border-red-100 hover:bg-red-100 transition-colors cursor-pointer"
                     >
-                      <div className="font-bold text-[#EF4444] text-sm leading-tight">{exam.examName}</div>
-                      <div className="flex justify-between items-center text-[11px] font-semibold text-[#DC2626]">
+                      <div className="font-bold text-[#EF4444] text-base leading-tight">{exam.examName}</div>
+                      <div className="flex justify-between items-center text-[13px] font-semibold text-[#DC2626]">
                         <span>{exam.shifts} Shifts</span>
                         <span>{exam.count} Students</span>
                       </div>
                       {exam.description && (
-                        <div className="text-[10px] text-red-400 mt-1 line-clamp-2">{exam.description}</div>
+                        <div className="text-xs text-red-400 mt-1 line-clamp-2">{exam.description}</div>
                       )}
                     </div>
                   ))}

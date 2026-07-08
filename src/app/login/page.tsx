@@ -42,46 +42,48 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md rounded-lg bg-white p-8 shadow-md">
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-semibold text-google-text">Exam Scheduler</h1>
-          <p className="text-google-textLight">Sign in to your account</p>
+    <div className="flex h-screen items-center justify-center bg-[#BBC2C9] font-sans antialiased p-4">
+      <div className="w-full max-w-md rounded-[32px] md:rounded-[40px] bg-white p-8 md:p-12 shadow-2xl">
+        <div className="mb-10 text-center">
+          <h1 className="text-3xl font-black text-gray-800 tracking-tight">Exam Scheduler</h1>
+          <p className="text-gray-500 font-medium mt-2">Sign in to your account</p>
         </div>
 
         {error && (
-          <div className="mb-4 rounded bg-red-100 p-3 text-sm text-red-700">
+          <div className="mb-6 rounded-[16px] bg-red-50 p-4 text-sm font-bold text-[#EF4444] border border-red-100">
             {error}
           </div>
         )}
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Email</label>
+            <label className="block text-sm font-bold text-gray-700 ml-1 mb-2">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-google-blue focus:outline-none focus:ring-1 focus:ring-google-blue sm:text-sm"
+              className="block w-full rounded-[16px] bg-[#F5F6F8] px-4 py-3.5 text-gray-800 font-medium border-2 border-transparent focus:border-[#EF4444] focus:bg-white focus:outline-none transition-colors"
               required
+              placeholder="Enter your email"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700">Password</label>
+            <label className="block text-sm font-bold text-gray-700 ml-1 mb-2">Password</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-google-blue focus:outline-none focus:ring-1 focus:ring-google-blue sm:text-sm"
+              className="block w-full rounded-[16px] bg-[#F5F6F8] px-4 py-3.5 text-gray-800 font-medium border-2 border-transparent focus:border-[#EF4444] focus:bg-white focus:outline-none transition-colors"
               required
+              placeholder="Enter your password"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-md bg-google-blue px-4 py-2 text-sm font-medium text-white hover:bg-google-blueHover focus:outline-none focus:ring-2 focus:ring-google-blue focus:ring-offset-2 disabled:opacity-50"
+            className="w-full rounded-full bg-[#EF4444] px-6 py-4 text-sm font-bold text-white shadow-[0_4px_12px_-4px_rgba(239,68,68,0.6)] hover:bg-[#DC2626] transition-colors focus:outline-none focus:ring-2 focus:ring-[#EF4444] focus:ring-offset-2 disabled:opacity-50 mt-4"
           >
             {loading ? "Signing in..." : "Sign in"}
           </button>
