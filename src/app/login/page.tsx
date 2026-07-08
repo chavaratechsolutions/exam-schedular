@@ -75,7 +75,7 @@ export default function LoginPage() {
             <h1 className="text-5xl font-black tracking-widest text-white uppercase mb-2 drop-shadow-md">Welcome</h1>
             <h2 className="text-sm font-bold tracking-widest text-white uppercase mb-6 drop-shadow-sm">Exam Scheduler</h2>
             <p className="text-[11px] font-medium leading-relaxed text-red-50 max-w-[320px] text-center mx-auto drop-shadow-sm">
-              Web application for efficiently scheduling, managing, and organizing student examinations across multiple dates using an interactive calendar interface.
+              Web application for efficiently scheduling, managing, and organizing system examinations across multiple dates using an interactive calendar interface.
             </p>
           </div>
         </div>

@@ -111,7 +111,7 @@ export default function ExamListView({ exams, onEdit, onDelete, isReadOnly = fal
                     </div>
                     <div className="flex-1 flex items-center justify-center text-sm font-bold text-gray-700 bg-red-50 rounded-[16px] py-3 border border-red-100">
                       <Users className="w-4 h-4 mr-2 text-[#EF4444]" />
-                      {exam.count} Students
+                      {exam.count} Systems
                     </div>
                   </div>
 

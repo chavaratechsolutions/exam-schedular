@@ -31,83 +31,88 @@ export default function ExamModal({ date, dates, onClose, onSave, onDelete, read
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="w-[450px] rounded-lg bg-white dark:bg-gray-900 shadow-2xl border dark:border-gray-700">
-        <div className="flex items-center justify-between rounded-t-lg bg-gray-50 dark:bg-gray-800 px-4 py-2">
-          <button className="rounded-full p-2 hover:bg-gray-200 dark:hover:bg-gray-700">
-             {/* drag handle could go here */}
-          </button>
-          <button onClick={onClose} className="rounded-full p-2 hover:bg-gray-200 dark:hover:bg-gray-700">
-            <X className="h-5 w-5 text-google-text dark:text-gray-300" />
-          </button>
-        </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+      <div className="relative w-full max-w-[500px] rounded-[32px] bg-white shadow-2xl p-8">
+        
+        {/* Close Button */}
+        <button 
+          onClick={onClose} 
+          className="absolute top-6 right-6 rounded-full p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+        >
+          <X className="h-6 w-6" />
+        </button>
 
-        <form onSubmit={handleSubmit} className="p-6">
+        <form onSubmit={handleSubmit} className="mt-4">
           {!readOnly ? (
             <input
               autoFocus
               type="text"
-              placeholder="Add exam title"
+              placeholder="Exam Title"
               value={examName}
               onChange={(e) => setExamName(e.target.value)}
-              className="mb-6 w-full border-b-2 border-transparent bg-transparent text-2xl text-google-text dark:text-gray-100 placeholder-gray-400 focus:border-google-blue focus:outline-none"
+              className="mb-8 w-full bg-transparent text-3xl font-black text-gray-800 placeholder-gray-300 focus:outline-none"
             />
           ) : (
-            <h2 className="mb-6 text-2xl text-google-text dark:text-gray-100">{examName}</h2>
+            <h2 className="mb-8 text-3xl font-black text-gray-800">{examName}</h2>
           )}
 
           <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-4">
-              <Clock className="h-5 w-5 text-google-textLight dark:text-gray-400" />
-              <span className="text-sm font-medium text-google-text dark:text-gray-200">
+            
+            {/* Date Display */}
+            <div className="flex items-center gap-4 rounded-xl bg-[#F4F6F9] px-4 py-3.5">
+              <Clock className="h-5 w-5 text-gray-500 shrink-0" />
+              <span className="text-sm font-bold text-gray-700">
                 {dates && dates.length > 1 
                   ? `${dates.length} days selected: ${dates.map(d => format(d, "MMM d")).join(", ")}`
                   : format(date, "EEEE, MMMM d")}
               </span>
             </div>
 
-            <div className="flex items-center gap-4">
-              <Users className="h-5 w-5 text-google-textLight dark:text-gray-400" />
+            {/* Systems Count */}
+            <div className="flex items-center gap-4 rounded-xl bg-[#F4F6F9] px-4 py-3.5 focus-within:bg-white focus-within:ring-1 focus-within:ring-gray-300 transition-all">
+              <Users className="h-5 w-5 text-gray-500 shrink-0" />
               {!readOnly ? (
                 <input
                   type="number"
-                  placeholder="Student Count"
+                  placeholder="System Count"
                   value={count}
                   onChange={(e) => setCount(e.target.value)}
-                  className="w-full rounded bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-sm dark:text-gray-200 focus:bg-white dark:focus:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-google-blue"
+                  className="w-full bg-transparent text-sm font-bold text-gray-800 placeholder-gray-400 focus:outline-none"
                 />
               ) : (
-                <span className="text-sm text-google-text dark:text-gray-200">{count} Students</span>
+                <span className="text-sm font-bold text-gray-700">{count} Systems</span>
               )}
             </div>
 
-            <div className="flex items-center gap-4">
-              <Copy className="h-5 w-5 text-google-textLight dark:text-gray-400" />
+            {/* Shifts */}
+            <div className="flex items-center gap-4 rounded-xl bg-[#F4F6F9] px-4 py-3.5 focus-within:bg-white focus-within:ring-1 focus-within:ring-gray-300 transition-all">
+              <Copy className="h-5 w-5 text-gray-500 shrink-0" />
               {!readOnly ? (
                 <input
                   type="number"
                   placeholder="Number of Shifts"
                   value={shifts}
                   onChange={(e) => setShifts(e.target.value)}
-                  className="w-full rounded bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-sm dark:text-gray-200 focus:bg-white dark:focus:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-google-blue"
+                  className="w-full bg-transparent text-sm font-bold text-gray-800 placeholder-gray-400 focus:outline-none"
                 />
               ) : (
-                <span className="text-sm text-google-text dark:text-gray-200">{shifts} Shifts</span>
+                <span className="text-sm font-bold text-gray-700">{shifts} Shifts</span>
               )}
             </div>
             
-            <div className="flex items-start gap-4">
-               <AlignLeft className="mt-1.5 h-5 w-5 text-google-textLight dark:text-gray-400" />
+            {/* Description */}
+            <div className="flex items-start gap-4 rounded-xl bg-[#F4F6F9] px-4 py-3.5 focus-within:bg-white focus-within:ring-1 focus-within:ring-gray-300 transition-all">
+               <AlignLeft className="mt-1 h-5 w-5 text-gray-500 shrink-0" />
                {!readOnly ? (
                  <textarea
-                   placeholder="Add description"
+                   placeholder="Add a description"
                    value={description}
                    onChange={(e) => setDescription(e.target.value)}
                    rows={3}
-                   className="w-full resize-none rounded bg-gray-100 dark:bg-gray-800 px-3 py-1.5 text-sm dark:text-gray-200 focus:bg-white dark:focus:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-google-blue"
+                   className="w-full resize-none bg-transparent text-sm font-bold text-gray-800 placeholder-gray-400 focus:outline-none"
                  />
                ) : (
-                 <span className="text-sm text-google-text dark:text-gray-200">{description || "No description provided."}</span>
+                 <span className="text-sm font-bold text-gray-700 whitespace-pre-wrap">{description || "No description provided."}</span>
                )}
             </div>
           </div>
@@ -118,7 +123,7 @@ export default function ExamModal({ date, dates, onClose, onSave, onDelete, read
                 <button
                   type="button"
                   onClick={onDelete}
-                  className="flex items-center gap-2 rounded px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                  className="flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-red-500 hover:bg-red-50 transition-colors"
                 >
                   <Trash2 className="h-4 w-4" />
                   Delete
@@ -126,7 +131,7 @@ export default function ExamModal({ date, dates, onClose, onSave, onDelete, read
               )}
               <button
                 type="submit"
-                className="rounded bg-google-blue px-6 py-2 text-sm font-medium text-white hover:bg-google-blueHover"
+                className="rounded-xl bg-[#EF4444] px-8 py-3 text-sm font-bold text-white shadow-md hover:bg-[#DC2626] transition-colors focus:outline-none focus:ring-2 focus:ring-[#EF4444] focus:ring-offset-2"
               >
                 Save
               </button>

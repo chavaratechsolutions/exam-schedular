@@ -93,7 +93,7 @@ export default function MonthView({ currentDate, exams, onDateClick, onEventClic
                       <div className="font-bold text-[#EF4444] text-base leading-tight">{exam.examName}</div>
                       <div className="flex justify-between items-center text-[13px] font-semibold text-[#DC2626]">
                         <span>{exam.shifts} Shifts</span>
-                        <span>{exam.count} Students</span>
+                        <span>{exam.count} Systems</span>
                       </div>
                       {exam.description && (
                         <div className="text-xs text-red-400 mt-1 line-clamp-2">{exam.description}</div>
