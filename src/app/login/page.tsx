@@ -52,7 +52,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-[#BBC2C9] p-4 font-sans antialiased">
 
       {/* Main Card Container */}
-      <div className="relative w-[75vw] h-[75vh] bg-white rounded-[24px] shadow-2xl overflow-hidden flex">
+      <div className="relative w-full h-[95vh] md:w-[75vw] md:h-[75vh] bg-white rounded-3xl md:rounded-[24px] shadow-2xl overflow-hidden flex flex-col md:flex-row">
 
         {/* Abstract Blue Circles Background (Left Side) */}
         {/* 1. Largest background circle with the Carmel image */}

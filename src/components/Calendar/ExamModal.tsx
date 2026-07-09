@@ -32,7 +32,7 @@ export default function ExamModal({ date, dates, onClose, onSave, onDelete, read
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="relative w-full max-w-[500px] rounded-[32px] bg-white shadow-2xl p-8">
+      <div className="relative w-full max-w-[500px] max-h-[95vh] overflow-y-auto rounded-3xl md:rounded-[32px] bg-white shadow-2xl p-6 md:p-8">
         
         {/* Close Button */}
         <button 

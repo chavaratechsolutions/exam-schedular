@@ -119,7 +119,7 @@ export default function CalendarHeader({
           </div>
           
           {isMonthDropdownOpen && (
-            <div className="absolute top-full mt-2 w-48 bg-white rounded-[16px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 z-50 overflow-hidden">
+            <div className="absolute top-full mt-2 w-48 bg-white rounded-[16px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 z-50 overflow-hidden left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0">
               <div className="max-h-60 overflow-y-auto py-2">
                 {months.map((m) => (
                   <div 
@@ -149,7 +149,7 @@ export default function CalendarHeader({
           </div>
           
           {isYearDropdownOpen && (
-            <div className="absolute top-full mt-2 w-32 bg-white rounded-[16px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 z-50 overflow-hidden">
+            <div className="absolute top-full mt-2 w-32 bg-white rounded-[16px] shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 z-50 overflow-hidden left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0">
               <div className="max-h-60 overflow-y-auto py-2">
                 {years.map((y) => (
                   <div 

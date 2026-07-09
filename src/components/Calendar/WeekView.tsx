@@ -15,10 +15,11 @@ export default function WeekView({ currentDate, exams, onDateClick, onEventClick
   const hours = Array.from({ length: 24 }).map((_, i) => i);
 
   return (
-    <div className="flex h-full flex-col overflow-y-auto">
-      <div className="sticky top-0 z-10 flex border-b border-google-border dark:border-gray-700 bg-white dark:bg-gray-900">
-        <div className="w-16 border-r border-google-border dark:border-gray-700" /> {/* Time column header */}
-        <div className="flex flex-1">
+    <div className="flex h-full flex-col overflow-auto">
+      <div className="min-w-[600px] flex flex-col flex-1 h-full">
+        <div className="sticky top-0 z-10 flex border-b border-google-border dark:border-gray-700 bg-white dark:bg-gray-900">
+          <div className="w-16 border-r border-google-border dark:border-gray-700" /> {/* Time column header */}
+          <div className="flex flex-1">
           {weekDays.map((day, i) => (
             <div key={i} className="flex flex-1 flex-col items-center border-r border-google-border dark:border-gray-700 py-2">
               <span className="text-xs font-medium text-google-textLight dark:text-gray-400">{format(day, "EEE")}</span>
@@ -86,6 +87,7 @@ export default function WeekView({ currentDate, exams, onDateClick, onEventClick
               </div>
             );
           })}
+        </div>
         </div>
       </div>
     </div>
