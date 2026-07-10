@@ -115,6 +115,16 @@ export default function ExamListView({ exams, onEdit, onDelete, isReadOnly = fal
                     </div>
                   </div>
 
+                  {exam.labs && exam.labs.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 p-3 bg-gray-50 rounded-[16px] border border-gray-100">
+                      {exam.labs.map((lab) => (
+                        <span key={lab} className="px-2.5 py-1 text-[10px] font-bold bg-white text-gray-700 rounded-[8px] border border-gray-200 shadow-sm">
+                          {lab}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
                   {exam.description && (
                     <div className="mt-2 text-xs font-medium text-gray-500 bg-[#F5F6F8] rounded-[16px] p-4 flex-1">
                       {exam.description}

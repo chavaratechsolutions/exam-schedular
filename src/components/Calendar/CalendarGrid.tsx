@@ -9,6 +9,7 @@ import MonthView from "./MonthView";
 import WeekView from "./WeekView";
 import ExamModal from "./ExamModal";
 import ExamListView from "./ExamListView";
+import TrashView from "./TrashView";
 import { Exam } from "../../types";
 import { useAuth } from "../../context/AuthContext";
 import { collection, addDoc, onSnapshot, query, doc, updateDoc, deleteDoc } from "firebase/firestore";
@@ -22,25 +23,45 @@ export default function CalendarGrid() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
   const [selectedExam, setSelectedExam] = useState<Exam | null>(null);
-  const [activeTab, setActiveTab] = useState<"calendar" | "exams">("calendar");
+  const [activeTab, setActiveTab] = useState<"calendar" | "exams" | "trash">("calendar");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   const { role, user } = useAuth();
-  const isReadOnly = role !== "admin";
+  const isReadOnly = role !== "dir";
 
   useEffect(() => {
     const q = query(collection(db, "exams"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const examsData = snapshot.docs.map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          ...data,
-          date: data.date.toDate(),
-        } as Exam;
-      });
-      setExams(examsData);
-    });
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        try {
+          const examsData = snapshot.docs.map((doc) => {
+            const data = doc.data();
+            let examDate: Date;
+
+            if (data.date && typeof data.date.toDate === "function") {
+              examDate = data.date.toDate();
+            } else if (data.date) {
+              examDate = new Date(data.date);
+            } else {
+              examDate = new Date();
+            }
+
+            return {
+              id: doc.id,
+              ...data,
+              date: examDate,
+            } as Exam;
+          });
+          setExams(examsData);
+        } catch (err) {
+          console.error("Error processing exams data: ", err);
+        }
+      },
+      (error) => {
+        console.error("Firestore onSnapshot error for exams: ", error);
+      }
+    );
     return () => unsubscribe();
   }, []);
 
@@ -110,14 +131,37 @@ export default function CalendarGrid() {
   const handleDeleteExam = async () => {
     if (!selectedExam) return;
     try {
-      await deleteDoc(doc(db, "exams", selectedExam.id));
+      await updateDoc(doc(db, "exams", selectedExam.id), {
+        deleted: true
+      });
       setIsModalOpen(false);
       setSelectedExam(null);
       setSelectedDates([]);
     } catch (error) {
-      console.error("Error deleting document: ", error);
+      console.error("Error soft deleting document: ", error);
     }
   };
+
+  const handleRestoreExam = async (examId: string) => {
+    try {
+      await updateDoc(doc(db, "exams", examId), {
+        deleted: false
+      });
+    } catch (error) {
+      console.error("Error restoring document: ", error);
+    }
+  };
+
+  const handleDeletePermanent = async (examId: string) => {
+    try {
+      await deleteDoc(doc(db, "exams", examId));
+    } catch (error) {
+      console.error("Error permanently deleting document: ", error);
+    }
+  };
+
+  const activeExams = exams.filter((exam) => !exam.deleted);
+  const deletedExams = exams.filter((exam) => exam.deleted);
 
   return (
     <div className="flex min-h-screen bg-[#BBC2C9] md:p-4 lg:p-8 items-center justify-center font-sans antialiased">
@@ -160,7 +204,9 @@ export default function CalendarGrid() {
                 </button>
               </div>
               <div className="flex-1 flex justify-center">
-                 <h2 className="text-lg font-bold text-gray-800">Exams</h2>
+                 <h2 className="text-lg font-bold text-gray-800">
+                   {activeTab === "exams" ? "Exams" : "Trash"}
+                 </h2>
               </div>
               <div className="w-10"></div>
             </header>
@@ -171,7 +217,7 @@ export default function CalendarGrid() {
               view === "month" ? (
                 <MonthView
                   currentDate={currentDate}
-                  exams={exams}
+                  exams={activeExams}
                   selectedDates={selectedDates}
                   onDateClick={handleDateClick}
                   onEventClick={handleEventClick}
@@ -180,18 +226,25 @@ export default function CalendarGrid() {
               ) : (
                 <WeekView
                   currentDate={currentDate}
-                  exams={exams}
+                  exams={activeExams}
                   selectedDates={selectedDates}
                   onDateClick={handleDateClick}
                   onEventClick={handleEventClick}
                 />
               )
-            ) : (
+            ) : activeTab === "exams" ? (
               <ExamListView 
-                exams={exams} 
+                exams={activeExams} 
                 onEdit={handleEventClick} 
                 onDelete={handleEventClick} 
                 isReadOnly={isReadOnly} 
+              />
+            ) : (
+              <TrashView
+                exams={deletedExams}
+                onRestore={handleRestoreExam}
+                onDeletePermanent={handleDeletePermanent}
+                isReadOnly={isReadOnly}
               />
             )}
           </main>

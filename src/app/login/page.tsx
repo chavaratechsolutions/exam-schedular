@@ -15,11 +15,18 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { user, role, loading: authLoading } = useAuth();
+  const { user, role, loading: authLoading, authError } = useAuth();
+
+  useEffect(() => {
+    if (authError) {
+      setError(authError);
+      setLoading(false);
+    }
+  }, [authError]);
 
   useEffect(() => {
     if (user && role && !authLoading) {
-      if (role === "admin") {
+      if (role === "dir") {
         router.push("/admin");
       } else {
         router.push("/user");

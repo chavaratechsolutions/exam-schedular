@@ -10,12 +10,12 @@ export default function AdminPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && role !== "admin") {
+    if (!loading && role !== "dir") {
       router.push("/login");
     }
   }, [role, loading, router]);
 
-  if (loading || role !== "admin") {
+  if (loading || role !== "dir") {
     return <div className="flex h-screen items-center justify-center">Loading...</div>;
   }
 

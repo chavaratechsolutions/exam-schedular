@@ -95,6 +95,15 @@ export default function MonthView({ currentDate, exams, onDateClick, onEventClic
                         <span>{exam.shifts} Shifts</span>
                         <span>{exam.count} Systems</span>
                       </div>
+                      {exam.labs && exam.labs.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-0.5">
+                          {exam.labs.map(lab => (
+                            <span key={lab} className="px-2 py-0.5 text-[9px] font-bold bg-white text-[#EF4444] rounded border border-red-100 shadow-sm">
+                              {lab}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                       {exam.description && (
                         <div className="text-xs text-red-400 mt-1 line-clamp-2">{exam.description}</div>
                       )}

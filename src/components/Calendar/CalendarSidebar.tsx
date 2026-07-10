@@ -1,11 +1,11 @@
-import { Menu, Calendar as CalendarIcon, List, LogOut, X } from "lucide-react";
+import { Menu, Calendar as CalendarIcon, List, LogOut, X, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 import { useAuth } from "../../context/AuthContext";
 
 interface CalendarSidebarProps {
   currentDate: Date;
-  activeTab: "calendar" | "exams";
-  onTabChange: (tab: "calendar" | "exams") => void;
+  activeTab: "calendar" | "exams" | "trash";
+  onTabChange: (tab: "calendar" | "exams" | "trash") => void;
   isMobileMenuOpen?: boolean;
   setIsMobileMenuOpen?: (isOpen: boolean) => void;
 }
@@ -74,6 +74,17 @@ export default function CalendarSidebar({ currentDate, activeTab, onTabChange, i
         >
           <List className="h-5 w-5" />
           Exams
+        </button>
+        <button 
+          onClick={() => onTabChange("trash")}
+          className={`flex items-center gap-3 px-5 py-3.5 rounded-[20px] font-medium transition-all ${
+            activeTab === "trash"
+              ? "bg-[#EF4444] text-white shadow-[0_8px_16px_-6px_rgba(239,68,68,0.5)]"
+              : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
+          }`}
+        >
+          <Trash2 className="h-5 w-5" />
+          Trash
         </button>
       </nav>
 

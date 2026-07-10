@@ -5,13 +5,14 @@ import { onAuthStateChanged, User, signOut as firebaseSignOut } from "firebase/a
 import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../lib/firebase";
 
-export type Role = "admin" | "user" | null;
+export type Role = "dir" | "hod" | "staff" | null;
 
 interface AuthContextType {
   user: User | null;
   role: Role;
   loading: boolean;
   signOut: () => Promise<void>;
+  authError?: string | null;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -25,23 +26,42 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<Role>(null);
   const [loading, setLoading] = useState(true);
+  const [authError, setAuthError] = useState<string | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
+      setAuthError(null);
       if (currentUser) {
         try {
           const userDoc = await getDoc(doc(db, "users", currentUser.uid));
           if (userDoc.exists()) {
-            setRole(userDoc.data().role as Role);
+            const data = userDoc.data();
+            
+            if (data.role === "staff") {
+              if (data.designation === "Assistant Professor" || data.designation === "Associate Professor") {
+                setUser(currentUser);
+                setRole(data.role as Role);
+              } else {
+                await firebaseSignOut(auth);
+                setUser(null);
+                setRole(null);
+                setAuthError("Access denied: Unauthorized designation.");
+              }
+            } else {
+              setUser(currentUser);
+              setRole(data.role as Role);
+            }
           } else {
-            setRole("user"); // Default fallback
+            setUser(currentUser);
+            setRole("hod"); // Default fallback
           }
         } catch (error) {
           console.error("Error fetching user role", error);
-          setRole("user");
+          setUser(currentUser);
+          setRole("hod");
         }
       } else {
+        setUser(null);
         setRole(null);
       }
       setLoading(false);

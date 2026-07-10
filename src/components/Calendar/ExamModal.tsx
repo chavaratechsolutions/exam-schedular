@@ -1,30 +1,65 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { format } from "date-fns";
-import { X, Clock, Users, Copy, AlignLeft, Trash2 } from "lucide-react";
+import { X, Clock, Users, Copy, AlignLeft, Trash2, MapPin, ChevronDown } from "lucide-react";
 
 interface ExamModalProps {
   date: Date;
   onClose: () => void;
-  onSave: (examData: { examName: string; count: number; shifts: number; description: string; date: Date }) => void;
+  onSave: (examData: { examName: string; count: number; shifts: number; labs: string[]; description: string; date: Date }) => void;
   onDelete?: () => void;
   readOnly?: boolean;
   existingExam?: any;
   dates?: Date[];
 }
 
+const LAB_OPTIONS = [
+  "CC LAB",
+  "ME LAB",
+  "CIVIL LAB",
+  "LAB 1",
+  "LAB 4",
+  "LAB 2",
+  "LAB 3",
+  "EEE LAB",
+  "LAB 5"
+];
+
 export default function ExamModal({ date, dates, onClose, onSave, onDelete, readOnly, existingExam }: ExamModalProps) {
   const [examName, setExamName] = useState(existingExam?.examName || "");
   const [count, setCount] = useState(existingExam?.count?.toString() || "");
   const [shifts, setShifts] = useState(existingExam?.shifts?.toString() || "");
+  const [selectedLabs, setSelectedLabs] = useState<string[]>(existingExam?.labs || []);
   const [description, setDescription] = useState(existingExam?.description || "");
+
+  const [isShiftsDropdownOpen, setIsShiftsDropdownOpen] = useState(false);
+  const shiftsDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (shiftsDropdownRef.current && !shiftsDropdownRef.current.contains(event.target as Node)) {
+        setIsShiftsDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleToggleLab = (lab: string) => {
+    setSelectedLabs((prev) =>
+      prev.includes(lab)
+        ? prev.filter((l) => l !== lab)
+        : [...prev, lab]
+    );
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!examName || !count || !shifts) return;
+    if (!examName) return;
     onSave({
       examName,
-      count: parseInt(count, 10),
-      shifts: parseInt(shifts, 10),
+      count: count ? parseInt(count, 10) : 0,
+      shifts: shifts ? parseInt(shifts, 10) : 0,
+      labs: selectedLabs,
       description,
       date,
     });
@@ -85,18 +120,93 @@ export default function ExamModal({ date, dates, onClose, onSave, onDelete, read
             </div>
 
             {/* Shifts */}
-            <div className="flex items-center gap-4 rounded-xl bg-[#F4F6F9] px-4 py-3.5 focus-within:bg-white focus-within:ring-1 focus-within:ring-gray-300 transition-all">
-              <Copy className="h-5 w-5 text-gray-500 shrink-0" />
+            <div className="relative w-full" ref={shiftsDropdownRef}>
+              <div 
+                onClick={() => !readOnly && setIsShiftsDropdownOpen(!isShiftsDropdownOpen)}
+                className={`flex items-center gap-4 rounded-xl bg-[#F4F6F9] px-4 py-3.5 transition-all cursor-pointer ${
+                  !readOnly ? "hover:bg-gray-100" : ""
+                }`}
+              >
+                <Copy className="h-5 w-5 text-gray-500 shrink-0" />
+                <div className="flex-1 flex justify-between items-center">
+                  {!readOnly ? (
+                    <>
+                      <span className={`text-sm font-bold ${shifts ? 'text-gray-800' : 'text-gray-400'}`}>
+                        {shifts ? `${shifts} Shift${shifts !== "1" ? "s" : ""}` : "Select Number of Shifts"}
+                      </span>
+                      <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isShiftsDropdownOpen ? 'rotate-180' : ''}`} />
+                    </>
+                  ) : (
+                    <span className="text-sm font-bold text-gray-700">
+                      {shifts ? `${shifts} Shift${shifts !== "1" ? "s" : ""}` : "No Shifts"}
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {isShiftsDropdownOpen && !readOnly && (
+                <div className="absolute left-0 right-0 top-full mt-1.5 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 z-[100] overflow-hidden">
+                  <div className="py-1">
+                    {["1", "2", "3", "4"].map((option) => (
+                      <div 
+                        key={option}
+                        onClick={() => {
+                          setShifts(option);
+                          setIsShiftsDropdownOpen(false);
+                        }}
+                        className={`px-5 py-3 text-sm font-bold cursor-pointer hover:bg-red-50 hover:text-[#EF4444] transition-colors ${
+                          shifts === option ? 'bg-red-50 text-[#EF4444]' : 'text-gray-600'
+                        }`}
+                      >
+                        {option} Shift{option !== "1" ? "s" : ""}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Labs */}
+            <div className="flex flex-col gap-2 rounded-xl bg-[#F4F6F9] px-4 py-3.5 transition-all">
+              <div className="flex items-center gap-4">
+                <MapPin className="h-5 w-5 text-gray-500 shrink-0" />
+                <span className="text-sm font-bold text-gray-500">Select Labs</span>
+              </div>
               {!readOnly ? (
-                <input
-                  type="number"
-                  placeholder="Number of Shifts"
-                  value={shifts}
-                  onChange={(e) => setShifts(e.target.value)}
-                  className="w-full bg-transparent text-sm font-bold text-gray-800 placeholder-gray-400 focus:outline-none"
-                />
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {LAB_OPTIONS.map((lab) => {
+                    const isSelected = selectedLabs.includes(lab);
+                    return (
+                      <button
+                        key={lab}
+                        type="button"
+                        onClick={() => handleToggleLab(lab)}
+                        className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${
+                          isSelected
+                            ? "bg-[#EF4444] border-[#EF4444] text-white shadow-sm"
+                            : "bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50"
+                        }`}
+                      >
+                        {lab}
+                      </button>
+                    );
+                  })}
+                </div>
               ) : (
-                <span className="text-sm font-bold text-gray-700">{shifts} Shifts</span>
+                <div className="flex flex-wrap gap-2 mt-1">
+                  {selectedLabs.length > 0 ? (
+                    selectedLabs.map((lab) => (
+                      <span
+                        key={lab}
+                        className="px-3 py-1.5 rounded-full text-xs font-bold bg-white text-gray-700 border border-gray-200 shadow-sm"
+                      >
+                        {lab}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="text-sm font-bold text-gray-700">No labs selected</span>
+                  )}
+                </div>
               )}
             </div>
             
