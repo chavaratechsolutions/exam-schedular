@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { addMonths, subMonths, addWeeks, subWeeks, isSameDay } from "date-fns";
 import { Menu } from "lucide-react";
 import CalendarHeader from "./CalendarHeader";
 import CalendarSidebar from "./CalendarSidebar";
 import MonthView from "./MonthView";
 import WeekView from "./WeekView";
-import ExamModal from "./ExamModal";
+import ExamModal, { LAB_DEPARTMENTS } from "./ExamModal";
 import ExamListView from "./ExamListView";
 import TrashView from "./TrashView";
 import { Exam } from "../../types";
@@ -26,8 +26,20 @@ export default function CalendarGrid() {
   const [activeTab, setActiveTab] = useState<"calendar" | "exams" | "trash">("calendar");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
-  const { role, user } = useAuth();
+  const { role, user, department } = useAuth();
   const isReadOnly = role !== "dir";
+
+  const userLabs = useMemo(() => {
+    if (!department) return [];
+    const dept = LAB_DEPARTMENTS.find(d => d.name === department);
+    return dept ? dept.labs : [];
+  }, [department]);
+
+  const displayExams = useMemo(() => {
+    if (!isReadOnly || !department) return exams;
+    if (userLabs.length === 0) return [];
+    return exams.filter(exam => exam.labs?.some(lab => userLabs.includes(lab)));
+  }, [exams, isReadOnly, department, userLabs]);
 
   useEffect(() => {
     const q = query(collection(db, "exams"));
@@ -160,8 +172,8 @@ export default function CalendarGrid() {
     }
   };
 
-  const activeExams = exams.filter((exam) => !exam.deleted);
-  const deletedExams = exams.filter((exam) => exam.deleted);
+  const activeExams = displayExams.filter((exam) => !exam.deleted);
+  const deletedExams = displayExams.filter((exam) => exam.deleted);
 
   return (
     <div className="flex min-h-screen bg-[#BBC2C9] md:p-4 lg:p-8 items-center justify-center font-sans antialiased">
@@ -222,6 +234,7 @@ export default function CalendarGrid() {
                   onDateClick={handleDateClick}
                   onEventClick={handleEventClick}
                   isMultiSelectMode={isMultiSelectMode}
+                  isReadOnly={isReadOnly}
                 />
               ) : (
                 <WeekView
@@ -230,6 +243,7 @@ export default function CalendarGrid() {
                   selectedDates={selectedDates}
                   onDateClick={handleDateClick}
                   onEventClick={handleEventClick}
+                  isReadOnly={isReadOnly}
                 />
               )
             ) : activeTab === "exams" ? (

@@ -69,14 +69,20 @@ export default function ExamListView({ exams, onEdit, onDelete, isReadOnly = fal
       ) : (
         <div className="flex-1 overflow-y-auto no-scrollbar min-h-0 pb-6 pr-2">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredExams.map((exam) => (
+            {filteredExams.map((exam) => {
+              const isPast = exam.date.getTime() < today.getTime();
+              return (
               <div 
                 key={exam.id}
-                className="bg-white p-6 rounded-[24px] shadow-sm hover:shadow-md transition-shadow border-2 border-transparent hover:border-red-100 flex flex-col min-h-[220px]"
+                className={`p-6 rounded-[24px] shadow-sm hover:shadow-md transition-shadow border-2 flex flex-col min-h-[220px] ${
+                  isPast
+                    ? "bg-[repeating-linear-gradient(45deg,#e5e7eb,#e5e7eb_10px,#f9fafb_10px,#f9fafb_20px)] border-gray-200 hover:border-gray-300 opacity-90"
+                    : "bg-white border-transparent hover:border-red-100"
+                }`}
               >
                 <div className="flex justify-between items-start mb-4">
-                  <h3 className="font-bold text-[#EF4444] text-xl leading-tight line-clamp-2" title={exam.examName}>
-                    {exam.examName}
+                  <h3 className="font-bold text-[#EF4444] text-xl leading-tight line-clamp-2" title={isReadOnly ? format(exam.date, "EEEE, MMMM d, yyyy") : exam.examName}>
+                    {isReadOnly ? format(exam.date, "EEEE, MMMM d, yyyy") : exam.examName}
                   </h3>
                   {!isReadOnly && (
                     <div className="flex gap-2 ml-2 shrink-0">
@@ -99,23 +105,44 @@ export default function ExamListView({ exams, onEdit, onDelete, isReadOnly = fal
                 </div>
 
                 <div className="flex flex-col gap-3 flex-1">
-                  <div className="flex items-center text-sm font-bold text-gray-600 bg-[#F5F6F8] rounded-[16px] px-4 py-3">
-                    <CalendarIcon className="w-5 h-5 mr-3 text-[#EF4444]" />
-                    {format(exam.date, "EEEE, MMMM d, yyyy")}
+                  <div className={`flex text-sm font-bold text-gray-600 bg-[#F5F6F8] rounded-[16px] px-4 py-3 ${isReadOnly ? 'items-start' : 'items-center'}`}>
+                    {isReadOnly ? (
+                      <>
+                        <span className="material-symbols-outlined mr-3 mt-0.5 text-[#EF4444] shrink-0 text-[20px]">desktop_mac</span>
+                        <div className="flex flex-wrap gap-1.5 flex-1">
+                          {exam.labs?.length ? (
+                            exam.labs.map((lab) => (
+                              <span key={lab} className="px-2.5 py-1 text-[10px] font-bold bg-white text-gray-700 rounded-[8px] border border-gray-200 shadow-sm">
+                                {lab}
+                              </span>
+                            ))
+                          ) : (
+                            <span className="mt-0.5">Occupied</span>
+                          )}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <CalendarIcon className="w-5 h-5 mr-3 text-[#EF4444] shrink-0" />
+                        {format(exam.date, "EEEE, MMMM d, yyyy")}
+                      </>
+                    )}
                   </div>
 
-                  <div className="flex gap-3">
-                    <div className="flex-1 flex items-center justify-center text-sm font-bold text-gray-700 bg-red-50 rounded-[16px] py-3 border border-red-100">
-                      <Clock className="w-4 h-4 mr-2 text-[#EF4444]" />
-                      {exam.shifts} Shift{exam.shifts !== 1 ? 's' : ''}
+                  {!isReadOnly && (
+                    <div className="flex gap-3">
+                      <div className="flex-1 flex items-center justify-center text-sm font-bold text-gray-700 bg-red-50 rounded-[16px] py-3 border border-red-100">
+                        <Clock className="w-4 h-4 mr-2 text-[#EF4444]" />
+                        {exam.shifts} Shift{exam.shifts !== 1 ? 's' : ''}
+                      </div>
+                      <div className="flex-1 flex items-center justify-center text-sm font-bold text-gray-700 bg-red-50 rounded-[16px] py-3 border border-red-100">
+                        <Users className="w-4 h-4 mr-2 text-[#EF4444]" />
+                        {exam.count} Systems
+                      </div>
                     </div>
-                    <div className="flex-1 flex items-center justify-center text-sm font-bold text-gray-700 bg-red-50 rounded-[16px] py-3 border border-red-100">
-                      <Users className="w-4 h-4 mr-2 text-[#EF4444]" />
-                      {exam.count} Systems
-                    </div>
-                  </div>
+                  )}
 
-                  {exam.labs && exam.labs.length > 0 && (
+                  {exam.labs && exam.labs.length > 0 && !isReadOnly && (
                     <div className="flex flex-wrap gap-1.5 p-3 bg-gray-50 rounded-[16px] border border-gray-100">
                       {exam.labs.map((lab) => (
                         <span key={lab} className="px-2.5 py-1 text-[10px] font-bold bg-white text-gray-700 rounded-[8px] border border-gray-200 shadow-sm">
@@ -132,7 +159,8 @@ export default function ExamListView({ exams, onEdit, onDelete, isReadOnly = fal
                   )}
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}

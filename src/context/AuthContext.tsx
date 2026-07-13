@@ -10,6 +10,7 @@ export type Role = "dir" | "hod" | "staff" | null;
 interface AuthContextType {
   user: User | null;
   role: Role;
+  department?: string | null;
   loading: boolean;
   signOut: () => Promise<void>;
   authError?: string | null;
@@ -25,6 +26,7 @@ const AuthContext = createContext<AuthContextType>({
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<Role>(null);
+  const [department, setDepartment] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [authError, setAuthError] = useState<string | null>(null);
 
@@ -41,28 +43,34 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               if (data.designation === "Assistant Professor" || data.designation === "Associate Professor") {
                 setUser(currentUser);
                 setRole(data.role as Role);
+                setDepartment(data.department || null);
               } else {
                 await firebaseSignOut(auth);
                 setUser(null);
                 setRole(null);
+                setDepartment(null);
                 setAuthError("Access denied: Unauthorized designation.");
               }
             } else {
               setUser(currentUser);
               setRole(data.role as Role);
+              setDepartment(data.department || null);
             }
           } else {
             setUser(currentUser);
             setRole("hod"); // Default fallback
+            setDepartment(null);
           }
         } catch (error) {
           console.error("Error fetching user role", error);
           setUser(currentUser);
           setRole("hod");
+          setDepartment(null);
         }
       } else {
         setUser(null);
         setRole(null);
+        setDepartment(null);
       }
       setLoading(false);
     });
@@ -75,7 +83,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, role, loading, signOut }}>
+    <AuthContext.Provider value={{ user, role, department, loading, signOut, authError }}>
       {children}
     </AuthContext.Provider>
   );

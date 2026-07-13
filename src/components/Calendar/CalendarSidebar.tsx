@@ -11,7 +11,8 @@ interface CalendarSidebarProps {
 }
 
 export default function CalendarSidebar({ currentDate, activeTab, onTabChange, isMobileMenuOpen, setIsMobileMenuOpen }: CalendarSidebarProps) {
-  const { signOut } = useAuth();
+  const { signOut, role } = useAuth();
+  const isReadOnly = role !== "dir";
   const currentDay = format(currentDate, "dd");
   const currentMonthYear = format(currentDate, "MMMM yyyy");
 
@@ -75,17 +76,19 @@ export default function CalendarSidebar({ currentDate, activeTab, onTabChange, i
           <List className="h-5 w-5" />
           Exams
         </button>
-        <button 
-          onClick={() => onTabChange("trash")}
-          className={`flex items-center gap-3 px-5 py-3.5 rounded-[20px] font-medium transition-all ${
-            activeTab === "trash"
-              ? "bg-[#EF4444] text-white shadow-[0_8px_16px_-6px_rgba(239,68,68,0.5)]"
-              : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
-          }`}
-        >
-          <Trash2 className="h-5 w-5" />
-          Trash
-        </button>
+        {!isReadOnly && (
+          <button 
+            onClick={() => onTabChange("trash")}
+            className={`flex items-center gap-3 px-5 py-3.5 rounded-[20px] font-medium transition-all ${
+              activeTab === "trash"
+                ? "bg-[#EF4444] text-white shadow-[0_8px_16px_-6px_rgba(239,68,68,0.5)]"
+                : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
+            }`}
+          >
+            <Trash2 className="h-5 w-5" />
+            Trash
+          </button>
+        )}
       </nav>
 
         {/* Logout at bottom */}

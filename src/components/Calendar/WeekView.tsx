@@ -7,12 +7,14 @@ interface WeekViewProps {
   onDateClick: (date: Date) => void;
   onEventClick: (exam: Exam) => void;
   selectedDates?: Date[];
+  isReadOnly?: boolean;
 }
 
-export default function WeekView({ currentDate, exams, onDateClick, onEventClick, selectedDates = [] }: WeekViewProps) {
+export default function WeekView({ currentDate, exams, onDateClick, onEventClick, selectedDates = [], isReadOnly = false }: WeekViewProps) {
   const startDate = startOfWeek(currentDate);
   const weekDays = Array.from({ length: 7 }).map((_, i) => addDays(startDate, i));
   const hours = Array.from({ length: 24 }).map((_, i) => i);
+  const todayTime = new Date().setHours(0, 0, 0, 0);
 
   return (
     <div className="flex h-full flex-col overflow-auto">
@@ -53,8 +55,16 @@ export default function WeekView({ currentDate, exams, onDateClick, onEventClick
           {weekDays.map((day, i) => {
             const dayExams = exams.filter((exam) => isSameDay(new Date(exam.date), day));
             const isSelected = selectedDates.some(d => isSameDay(d, day));
+            const isPastDate = day.getTime() < todayTime;
+            const hasExams = dayExams.length > 0;
             return (
-              <div key={i} className={`relative flex-1 border-r border-google-border dark:border-gray-700 ${isSelected ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`}>
+              <div key={i} className={`relative flex-1 border-r border-google-border dark:border-gray-700 ${
+                isSelected 
+                  ? 'bg-blue-50/50 dark:bg-blue-900/10' 
+                  : (isPastDate && hasExams)
+                      ? 'bg-[repeating-linear-gradient(45deg,#e5e7eb,#e5e7eb_10px,#f9fafb_10px,#f9fafb_20px)]' 
+                      : ''
+              }`}>
                 {hours.map((hour) => (
                   <div
                     key={hour}
@@ -81,7 +91,10 @@ export default function WeekView({ currentDate, exams, onDateClick, onEventClick
                     className="absolute left-1 right-1 top-[20px] mt-1 cursor-pointer truncate rounded bg-google-blue px-2 py-1 text-xs font-medium text-white shadow-sm hover:bg-google-blueHover"
                     style={{ top: `${(idx + 1) * 30}px` }} // simple stagger
                   >
-                    {exam.examName} ({exam.shifts} shifts)
+                    {isReadOnly 
+                      ? (exam.labs?.length ? exam.labs.join(", ") : "Occupied")
+                      : `${exam.examName} (${exam.shifts} shifts)`
+                    }
                   </div>
                 ))}
               </div>

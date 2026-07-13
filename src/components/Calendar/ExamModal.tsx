@@ -12,16 +12,27 @@ interface ExamModalProps {
   dates?: Date[];
 }
 
-const LAB_OPTIONS = [
-  "CC LAB",
-  "ME LAB",
-  "CIVIL LAB",
-  "LAB 1",
-  "LAB 4",
-  "LAB 2",
-  "LAB 3",
-  "EEE LAB",
-  "LAB 5"
+export const LAB_DEPARTMENTS = [
+  {
+    name: "Computer Science & Engineering",
+    labs: ["LAB 1", "LAB 2", "LAB 3", "LAB 4", "LAB 5"]
+  },
+  {
+    name: "Mechanical Engineering",
+    labs: ["ME LAB"]
+  },
+  {
+    name: "Electrical & Electronics Engineering",
+    labs: ["EEE LAB"]
+  },
+  {
+    name: "Civil Engineering",
+    labs: ["CIVIL LAB"]
+  },
+  {
+    name: "Other",
+    labs: ["CC LAB"]
+  }
 ];
 
 export default function ExamModal({ date, dates, onClose, onSave, onDelete, readOnly, existingExam }: ExamModalProps) {
@@ -88,7 +99,9 @@ export default function ExamModal({ date, dates, onClose, onSave, onDelete, read
               className="mb-8 w-full bg-transparent text-3xl font-black text-gray-800 placeholder-gray-300 focus:outline-none"
             />
           ) : (
-            <h2 className="mb-8 text-3xl font-black text-gray-800">{examName}</h2>
+            <h2 className="mb-8 text-3xl font-black text-gray-800">
+              {selectedLabs.length ? selectedLabs.join(", ") : "Occupied"}
+            </h2>
           )}
 
           <div className="flex flex-col gap-4">
@@ -104,9 +117,9 @@ export default function ExamModal({ date, dates, onClose, onSave, onDelete, read
             </div>
 
             {/* Systems Count */}
-            <div className="flex items-center gap-4 rounded-xl bg-[#F4F6F9] px-4 py-3.5 focus-within:bg-white focus-within:ring-1 focus-within:ring-gray-300 transition-all">
-              <Users className="h-5 w-5 text-gray-500 shrink-0" />
-              {!readOnly ? (
+            {!readOnly && (
+              <div className="flex items-center gap-4 rounded-xl bg-[#F4F6F9] px-4 py-3.5 focus-within:bg-white focus-within:ring-1 focus-within:ring-gray-300 transition-all">
+                <Users className="h-5 w-5 text-gray-500 shrink-0" />
                 <input
                   type="number"
                   placeholder="System Count"
@@ -114,57 +127,47 @@ export default function ExamModal({ date, dates, onClose, onSave, onDelete, read
                   onChange={(e) => setCount(e.target.value)}
                   className="w-full bg-transparent text-sm font-bold text-gray-800 placeholder-gray-400 focus:outline-none"
                 />
-              ) : (
-                <span className="text-sm font-bold text-gray-700">{count} Systems</span>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Shifts */}
-            <div className="relative w-full" ref={shiftsDropdownRef}>
-              <div 
-                onClick={() => !readOnly && setIsShiftsDropdownOpen(!isShiftsDropdownOpen)}
-                className={`flex items-center gap-4 rounded-xl bg-[#F4F6F9] px-4 py-3.5 transition-all cursor-pointer ${
-                  !readOnly ? "hover:bg-gray-100" : ""
-                }`}
-              >
-                <Copy className="h-5 w-5 text-gray-500 shrink-0" />
-                <div className="flex-1 flex justify-between items-center">
-                  {!readOnly ? (
-                    <>
-                      <span className={`text-sm font-bold ${shifts ? 'text-gray-800' : 'text-gray-400'}`}>
-                        {shifts ? `${shifts} Shift${shifts !== "1" ? "s" : ""}` : "Select Number of Shifts"}
-                      </span>
-                      <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isShiftsDropdownOpen ? 'rotate-180' : ''}`} />
-                    </>
-                  ) : (
-                    <span className="text-sm font-bold text-gray-700">
-                      {shifts ? `${shifts} Shift${shifts !== "1" ? "s" : ""}` : "No Shifts"}
+            {!readOnly && (
+              <div className="relative w-full" ref={shiftsDropdownRef}>
+                <div 
+                  onClick={() => setIsShiftsDropdownOpen(!isShiftsDropdownOpen)}
+                  className="flex items-center gap-4 rounded-xl bg-[#F4F6F9] px-4 py-3.5 transition-all cursor-pointer hover:bg-gray-100"
+                >
+                  <Copy className="h-5 w-5 text-gray-500 shrink-0" />
+                  <div className="flex-1 flex justify-between items-center">
+                    <span className={`text-sm font-bold ${shifts ? 'text-gray-800' : 'text-gray-400'}`}>
+                      {shifts ? `${shifts} Shift${shifts !== "1" ? "s" : ""}` : "Select Number of Shifts"}
                     </span>
-                  )}
-                </div>
-              </div>
-
-              {isShiftsDropdownOpen && !readOnly && (
-                <div className="absolute left-0 right-0 top-full mt-1.5 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 z-[100] overflow-hidden">
-                  <div className="py-1">
-                    {["1", "2", "3", "4"].map((option) => (
-                      <div 
-                        key={option}
-                        onClick={() => {
-                          setShifts(option);
-                          setIsShiftsDropdownOpen(false);
-                        }}
-                        className={`px-5 py-3 text-sm font-bold cursor-pointer hover:bg-red-50 hover:text-[#EF4444] transition-colors ${
-                          shifts === option ? 'bg-red-50 text-[#EF4444]' : 'text-gray-600'
-                        }`}
-                      >
-                        {option} Shift{option !== "1" ? "s" : ""}
-                      </div>
-                    ))}
+                    <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isShiftsDropdownOpen ? 'rotate-180' : ''}`} />
                   </div>
                 </div>
-              )}
-            </div>
+
+                {isShiftsDropdownOpen && (
+                  <div className="absolute left-0 right-0 top-full mt-1.5 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 z-[100] overflow-hidden">
+                    <div className="py-1">
+                      {["1", "2", "3", "4"].map((option) => (
+                        <div 
+                          key={option}
+                          onClick={() => {
+                            setShifts(option);
+                            setIsShiftsDropdownOpen(false);
+                          }}
+                          className={`px-5 py-3 text-sm font-bold cursor-pointer hover:bg-red-50 hover:text-[#EF4444] transition-colors ${
+                            shifts === option ? 'bg-red-50 text-[#EF4444]' : 'text-gray-600'
+                          }`}
+                        >
+                          {option} Shift{option !== "1" ? "s" : ""}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Labs */}
             <div className="flex flex-col gap-2 rounded-xl bg-[#F4F6F9] px-4 py-3.5 transition-all">
@@ -173,24 +176,31 @@ export default function ExamModal({ date, dates, onClose, onSave, onDelete, read
                 <span className="text-sm font-bold text-gray-500">Select Labs</span>
               </div>
               {!readOnly ? (
-                <div className="flex flex-wrap gap-2 mt-1">
-                  {LAB_OPTIONS.map((lab) => {
-                    const isSelected = selectedLabs.includes(lab);
-                    return (
-                      <button
-                        key={lab}
-                        type="button"
-                        onClick={() => handleToggleLab(lab)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${
-                          isSelected
-                            ? "bg-[#EF4444] border-[#EF4444] text-white shadow-sm"
-                            : "bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50"
-                        }`}
-                      >
-                        {lab}
-                      </button>
-                    );
-                  })}
+                <div className="flex flex-col gap-4 mt-2">
+                  {LAB_DEPARTMENTS.map((dept) => (
+                    <div key={dept.name} className="flex flex-col gap-2">
+                      <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{dept.name}</span>
+                      <div className="flex flex-wrap gap-2">
+                        {dept.labs.map((lab) => {
+                          const isSelected = selectedLabs.includes(lab);
+                          return (
+                            <button
+                              key={lab}
+                              type="button"
+                              onClick={() => handleToggleLab(lab)}
+                              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${
+                                isSelected
+                                  ? "bg-[#EF4444] border-[#EF4444] text-white shadow-sm"
+                                  : "bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50"
+                              }`}
+                            >
+                              {lab}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <div className="flex flex-wrap gap-2 mt-1">

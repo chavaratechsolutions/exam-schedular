@@ -9,13 +9,15 @@ interface MonthViewProps {
   onEventClick: (exam: Exam) => void;
   selectedDates?: Date[];
   isMultiSelectMode?: boolean;
+  isReadOnly?: boolean;
 }
 
-export default function MonthView({ currentDate, exams, onDateClick, onEventClick, selectedDates = [], isMultiSelectMode = false }: MonthViewProps) {
+export default function MonthView({ currentDate, exams, onDateClick, onEventClick, selectedDates = [], isMultiSelectMode = false, isReadOnly = false }: MonthViewProps) {
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(monthStart);
   const startDate = startOfWeek(monthStart);
   const endDate = endOfWeek(monthEnd);
+  const todayTime = new Date().setHours(0, 0, 0, 0);
 
   const dateFormat = "dd";
   const days = [];
@@ -32,6 +34,8 @@ export default function MonthView({ currentDate, exams, onDateClick, onEventClic
 
       const hasExams = dayExams.length > 0;
 
+      const isPastDate = cloneDay.getTime() < todayTime;
+
       days.push(
         <div
           key={day.toString()}
@@ -40,9 +44,11 @@ export default function MonthView({ currentDate, exams, onDateClick, onEventClic
             isCurrentMonth 
               ? isSelected 
                   ? "bg-red-50 border-2 border-[#EF4444]" 
-                  : hasExams
-                      ? "bg-white hover:shadow-md border-2 border-[#EF4444]"
-                      : "bg-white hover:shadow-md border-2 border-transparent"
+                  : (isPastDate && hasExams)
+                      ? "bg-[repeating-linear-gradient(45deg,#e5e7eb,#e5e7eb_10px,#f9fafb_10px,#f9fafb_20px)] hover:shadow-md border-2 border-gray-300 hover:border-gray-400"
+                      : hasExams
+                          ? "bg-white hover:shadow-md border-2 border-[#EF4444]"
+                          : "bg-white hover:shadow-md border-2 border-transparent"
               : "bg-white/40 text-gray-400 border-2 border-transparent"
           }`}
         >
@@ -71,11 +77,13 @@ export default function MonthView({ currentDate, exams, onDateClick, onEventClic
                 className="cursor-pointer rounded-lg md:rounded-xl bg-red-100/80 px-1.5 py-1 md:px-2.5 md:py-1.5 hover:bg-red-200 transition-colors flex flex-col items-center text-center min-w-0 max-w-full"
               >
                 <span className="text-[9px] md:text-[11px] font-bold text-[#EF4444] truncate w-full leading-tight">
-                  {exam.examName}
+                  {isReadOnly ? (exam.labs?.length ? exam.labs.join(", ") : "Occupied") : exam.examName}
                 </span>
-                <span className="hidden md:block text-[10px] font-semibold text-[#DC2626] truncate w-full leading-tight mt-0.5">
-                  {exam.shifts} shifts
-                </span>
+                {!isReadOnly && (
+                  <span className="hidden md:block text-[10px] font-semibold text-[#DC2626] truncate w-full leading-tight mt-0.5">
+                    {exam.shifts} shifts
+                  </span>
+                )}
               </div>
             ))}
           </div>
@@ -90,12 +98,16 @@ export default function MonthView({ currentDate, exams, onDateClick, onEventClic
                       onClick={(e) => { e.stopPropagation(); onEventClick(exam); }}
                       className="bg-red-50 p-4 rounded-[16px] flex flex-col gap-2 border border-red-100 hover:bg-red-100 transition-colors cursor-pointer"
                     >
-                      <div className="font-bold text-[#EF4444] text-base leading-tight">{exam.examName}</div>
-                      <div className="flex justify-between items-center text-[13px] font-semibold text-[#DC2626]">
-                        <span>{exam.shifts} Shifts</span>
-                        <span>{exam.count} Systems</span>
+                      <div className="font-bold text-[#EF4444] text-base leading-tight">
+                        {isReadOnly ? (exam.labs?.length ? exam.labs.join(", ") : "Occupied") : exam.examName}
                       </div>
-                      {exam.labs && exam.labs.length > 0 && (
+                      {!isReadOnly && (
+                        <div className="flex justify-between items-center text-[13px] font-semibold text-[#DC2626]">
+                          <span>{exam.shifts} Shifts</span>
+                          <span>{exam.count} Systems</span>
+                        </div>
+                      )}
+                      {exam.labs && exam.labs.length > 0 && !isReadOnly && (
                         <div className="flex flex-wrap gap-1 mt-0.5">
                           {exam.labs.map(lab => (
                             <span key={lab} className="px-2 py-0.5 text-[9px] font-bold bg-white text-[#EF4444] rounded border border-red-100 shadow-sm">
@@ -110,12 +122,14 @@ export default function MonthView({ currentDate, exams, onDateClick, onEventClic
                     </div>
                   ))}
                </div>
-               <button 
-                 onClick={(e) => { e.stopPropagation(); onDateClick(cloneDay); }}
-                 className="mt-3 flex items-center justify-center w-full bg-red-50 hover:bg-red-100 text-[#EF4444] rounded-xl py-2 font-bold transition-colors border border-red-200"
-               >
-                 <Plus className="w-5 h-5" />
-               </button>
+               {!isReadOnly && (
+                 <button 
+                   onClick={(e) => { e.stopPropagation(); onDateClick(cloneDay); }}
+                   className="mt-3 flex items-center justify-center w-full bg-red-50 hover:bg-red-100 text-[#EF4444] rounded-xl py-2 font-bold transition-colors border border-red-200"
+                 >
+                   <Plus className="w-5 h-5" />
+                 </button>
+               )}
             </div>
           )}
         </div>
