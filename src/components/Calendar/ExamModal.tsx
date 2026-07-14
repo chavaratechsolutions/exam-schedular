@@ -35,6 +35,18 @@ export const LAB_DEPARTMENTS = [
   }
 ];
 
+export const ORDERED_LABS = [
+  "CC LAB",
+  "ME LAB",
+  "CIVIL LAB",
+  "LAB 1",
+  "LAB 4",
+  "LAB 2",
+  "LAB 3",
+  "EEE LAB",
+  "LAB 5"
+];
+
 export default function ExamModal({ date, dates, onClose, onSave, onDelete, readOnly, existingExam }: ExamModalProps) {
   const [examName, setExamName] = useState(existingExam?.examName || "");
   const [count, setCount] = useState(existingExam?.count?.toString() || "");
@@ -176,31 +188,24 @@ export default function ExamModal({ date, dates, onClose, onSave, onDelete, read
                 <span className="text-sm font-bold text-gray-500">Select Labs</span>
               </div>
               {!readOnly ? (
-                <div className="flex flex-col gap-4 mt-2">
-                  {LAB_DEPARTMENTS.map((dept) => (
-                    <div key={dept.name} className="flex flex-col gap-2">
-                      <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{dept.name}</span>
-                      <div className="flex flex-wrap gap-2">
-                        {dept.labs.map((lab) => {
-                          const isSelected = selectedLabs.includes(lab);
-                          return (
-                            <button
-                              key={lab}
-                              type="button"
-                              onClick={() => handleToggleLab(lab)}
-                              className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${
-                                isSelected
-                                  ? "bg-[#EF4444] border-[#EF4444] text-white shadow-sm"
-                                  : "bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50"
-                              }`}
-                            >
-                              {lab}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ))}
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {ORDERED_LABS.map((lab) => {
+                    const isSelected = selectedLabs.includes(lab);
+                    return (
+                      <button
+                        key={lab}
+                        type="button"
+                        onClick={() => handleToggleLab(lab)}
+                        className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${
+                          isSelected
+                            ? "bg-[#EF4444] border-[#EF4444] text-white shadow-sm"
+                            : "bg-white border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50"
+                        }`}
+                      >
+                        {lab}
+                      </button>
+                    );
+                  })}
                 </div>
               ) : (
                 <div className="flex flex-wrap gap-2 mt-1">
