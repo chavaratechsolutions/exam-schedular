@@ -93,7 +93,7 @@ export default function WeekView({ currentDate, exams, onDateClick, onEventClick
                   >
                     {isReadOnly 
                       ? (exam.labs?.length ? exam.labs.join(", ") : "Occupied")
-                      : `${exam.examName} (${exam.shifts} shifts)`
+                      : `${exam.examName} (${exam.shifts} shifts)${exam.labs?.length ? ` - ${exam.labs.join(", ")}` : ""}`
                     }
                   </div>
                 ))}

@@ -27,11 +27,11 @@ export default function CalendarSidebar({ currentDate, activeTab, onTabChange, i
       )}
       
       {/* Sidebar Content */}
-      <aside className={`fixed md:relative top-0 left-0 h-[100dvh] md:h-auto flex w-[280px] md:w-[260px] flex-col p-6 bg-white z-50 transform transition-transform duration-300 ease-in-out ${
+      <aside className={`fixed md:relative top-0 left-0 h-[100dvh] md:h-auto flex w-[280px] md:w-[200px] lg:w-[220px] xl:w-[240px] flex-col p-6 md:p-4 lg:p-5 bg-white z-50 transform transition-transform duration-300 ease-in-out ${
         isMobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
       }`}>
         {/* Header / Menu Icon */}
-        <div className="mb-8 flex items-center justify-between pl-2">
+        <div className="mb-6 lg:mb-8 flex items-center justify-between pl-2">
           <Menu className="h-7 w-7 text-gray-800 hidden md:block" />
           <div className="md:hidden font-black text-xl text-gray-800">Menu</div>
           <button 
@@ -43,50 +43,50 @@ export default function CalendarSidebar({ currentDate, activeTab, onTabChange, i
         </div>
 
         {/* Date Display */}
-      <div className="mb-10 pl-2">
-        <div className="text-[72px] leading-[0.8] font-black text-[#EF4444] tracking-tighter">
+      <div className="mb-6 lg:mb-10 pl-2">
+        <div className="text-[72px] md:text-[52px] lg:text-[72px] leading-[0.8] font-black text-[#EF4444] tracking-tighter">
           {currentDay}
         </div>
-        <div className="text-xl font-bold text-gray-800 mt-2">
+        <div className="text-xl md:text-base lg:text-xl font-bold text-gray-800 mt-2">
           {currentMonthYear}
         </div>
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex flex-col gap-2 flex-1">
+      <nav className="flex flex-col gap-1.5 lg:gap-2 flex-1">
         <button 
           onClick={() => onTabChange("calendar")}
-          className={`flex items-center gap-3 px-5 py-3.5 rounded-[20px] font-medium transition-all ${
+          className={`flex items-center gap-2 lg:gap-3 px-3 py-2.5 lg:px-5 lg:py-3.5 rounded-[16px] lg:rounded-[20px] font-medium transition-all ${
             activeTab === "calendar"
               ? "bg-[#EF4444] text-white shadow-[0_8px_16px_-6px_rgba(239,68,68,0.5)]"
               : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
           }`}
         >
-          <CalendarIcon className="h-5 w-5" />
-          Calendar
+          <CalendarIcon className="h-5 w-5 md:h-4 md:w-4 lg:h-5 lg:w-5" />
+          <span className="text-sm lg:text-base">Calendar</span>
         </button>
         <button 
           onClick={() => onTabChange("exams")}
-          className={`flex items-center gap-3 px-5 py-3.5 rounded-[20px] font-medium transition-all ${
+          className={`flex items-center gap-2 lg:gap-3 px-3 py-2.5 lg:px-5 lg:py-3.5 rounded-[16px] lg:rounded-[20px] font-medium transition-all ${
             activeTab === "exams"
               ? "bg-[#EF4444] text-white shadow-[0_8px_16px_-6px_rgba(239,68,68,0.5)]"
               : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
           }`}
         >
-          <List className="h-5 w-5" />
-          Exams
+          <List className="h-5 w-5 md:h-4 md:w-4 lg:h-5 lg:w-5" />
+          <span className="text-sm lg:text-base">Exams</span>
         </button>
         {!isReadOnly && (
           <button 
             onClick={() => onTabChange("trash")}
-            className={`flex items-center gap-3 px-5 py-3.5 rounded-[20px] font-medium transition-all ${
+            className={`flex items-center gap-2 lg:gap-3 px-3 py-2.5 lg:px-5 lg:py-3.5 rounded-[16px] lg:rounded-[20px] font-medium transition-all ${
               activeTab === "trash"
                 ? "bg-[#EF4444] text-white shadow-[0_8px_16px_-6px_rgba(239,68,68,0.5)]"
                 : "text-gray-500 hover:bg-gray-50 hover:text-gray-800"
             }`}
           >
-            <Trash2 className="h-5 w-5" />
-            Trash
+            <Trash2 className="h-5 w-5 md:h-4 md:w-4 lg:h-5 lg:w-5" />
+            <span className="text-sm lg:text-base">Trash</span>
           </button>
         )}
       </nav>
@@ -94,10 +94,10 @@ export default function CalendarSidebar({ currentDate, activeTab, onTabChange, i
         {/* Logout at bottom */}
         <button 
           onClick={signOut}
-          className="flex items-center gap-3 px-5 py-3.5 text-red-500 font-bold hover:bg-red-50 rounded-[20px] transition-all mt-auto"
+          className="flex items-center gap-2 lg:gap-3 px-3 py-2.5 lg:px-5 lg:py-3.5 text-red-500 font-bold hover:bg-red-50 rounded-[16px] lg:rounded-[20px] transition-all mt-auto"
         >
-          <LogOut className="h-5 w-5" />
-          Logout
+          <LogOut className="h-5 w-5 md:h-4 md:w-4 lg:h-5 lg:w-5" />
+          <span className="text-sm lg:text-base">Logout</span>
         </button>
       </aside>
     </>

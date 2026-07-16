@@ -23,7 +23,7 @@ export default function CalendarGrid() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
   const [selectedExam, setSelectedExam] = useState<Exam | null>(null);
-  const [activeTab, setActiveTab] = useState<"calendar" | "exams" | "trash">("calendar");
+  const [activeTab, setActiveTab] = useState<"calendar" | "exams" | "trash">("exams");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   const { role, user, department } = useAuth();

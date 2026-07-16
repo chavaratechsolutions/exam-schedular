@@ -140,6 +140,12 @@ export default function LoginPage() {
                 </button>
               </div>
 
+              {/* Warning Message */}
+              <div className="flex items-center justify-center space-x-2 text-[#EF4444] mt-2 mb-2">
+                <span className="material-symbols-outlined text-[20px]">warning</span>
+                <span className="text-xs font-bold">Username and Password are the same as HR Management</span>
+              </div>
+
               {/* Sign In Button */}
               <div className="pt-2">
                 <button

@@ -40,7 +40,7 @@ export default function MonthView({ currentDate, exams, onDateClick, onEventClic
         <div
           key={day.toString()}
           onClick={() => onDateClick(cloneDay)}
-          className={`relative flex flex-col rounded-[16px] md:rounded-[24px] p-1 sm:p-3 transition-all duration-200 cursor-pointer shadow-sm min-h-0 ${!isMultiSelectMode ? 'group hover:z-50' : ''} ${
+          className={`relative flex flex-col rounded-[12px] md:rounded-[20px] p-[clamp(1px,1.5vh,14px)] md:p-[5%] transition-all duration-200 cursor-pointer shadow-sm min-h-0 ${!isMultiSelectMode ? 'group hover:z-50' : ''} ${
             isCurrentMonth 
               ? isSelected 
                   ? "bg-red-50 border-2 border-[#EF4444]" 
@@ -53,11 +53,11 @@ export default function MonthView({ currentDate, exams, onDateClick, onEventClic
           }`}
         >
           {isSelected && (
-            <CheckCircle2 className="absolute top-3 right-3 w-5 h-5 text-[#EF4444] fill-red-100" />
+            <CheckCircle2 className="absolute top-2 right-2 w-4 h-4 md:top-3 md:right-3 md:w-5 md:h-5 text-[#EF4444] fill-red-100" />
           )}
-          <div className="flex justify-center items-center h-8 md:h-10 w-full mb-1 md:mb-2 shrink-0">
+          <div className="flex justify-center items-center h-6 sm:h-8 md:h-8 w-full mb-1 shrink-0">
             <span
-              className={`text-sm md:text-lg font-bold ${
+              className={`font-bold text-[clamp(11px,1.2vw,18px)] ${
                 isSameDay(day, new Date())
                   ? "text-[#EF4444]"
                   : isCurrentMonth ? "text-gray-700" : "text-gray-400"
@@ -66,7 +66,7 @@ export default function MonthView({ currentDate, exams, onDateClick, onEventClic
               {formattedDate}
             </span>
           </div>
-          <div className={`flex-1 flex flex-row flex-wrap justify-center content-start gap-1 md:gap-1.5 overflow-y-auto no-scrollbar min-h-0 ${!isMultiSelectMode ? 'md:group-hover:opacity-0 transition-opacity duration-200' : ''}`}>
+          <div className={`flex-1 flex flex-col justify-start content-start gap-1 md:gap-1.5 overflow-y-auto no-scrollbar min-h-0 ${!isMultiSelectMode ? 'md:group-hover:opacity-0 transition-opacity duration-200' : ''}`}>
             {dayExams.map((exam) => (
               <div
                 key={exam.id}
@@ -74,13 +74,13 @@ export default function MonthView({ currentDate, exams, onDateClick, onEventClic
                   e.stopPropagation();
                   onEventClick(exam);
                 }}
-                className="cursor-pointer rounded-lg md:rounded-xl bg-red-100/80 px-1.5 py-1 md:px-2.5 md:py-1.5 hover:bg-red-200 transition-colors flex flex-col items-center text-center min-w-0 max-w-full"
+                className="cursor-pointer rounded-md md:rounded-lg bg-red-100/80 px-1 py-1 md:px-1.5 md:py-1 hover:bg-red-200 transition-colors flex flex-col items-center text-center w-full min-w-0"
               >
-                <span className="text-[9px] md:text-[11px] font-bold text-[#EF4444] truncate w-full leading-tight">
+                <span className="font-bold text-[clamp(8px,0.9vw,12px)] text-[#EF4444] line-clamp-2 break-words w-full leading-tight">
                   {isReadOnly ? (exam.labs?.length ? exam.labs.join(", ") : "Occupied") : exam.examName}
                 </span>
                 {!isReadOnly && (
-                  <span className="hidden md:block text-[10px] font-semibold text-[#DC2626] truncate w-full leading-tight mt-0.5">
+                  <span className="hidden md:block font-semibold text-[clamp(7px,0.7vw,10px)] text-[#DC2626] truncate w-full leading-tight mt-0.5">
                     {exam.shifts} shifts
                   </span>
                 )}
