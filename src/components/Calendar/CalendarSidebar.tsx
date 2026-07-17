@@ -44,10 +44,10 @@ export default function CalendarSidebar({ currentDate, activeTab, onTabChange, i
 
         {/* Date Display */}
       <div className="mb-6 lg:mb-10 pl-2">
-        <div className="text-[72px] md:text-[52px] lg:text-[72px] leading-[0.8] font-black text-[#EF4444] tracking-tighter">
+        <div className="text-[72px] md:text-[42px] lg:text-[52px] min-[2000px]:text-[72px] leading-[0.8] font-black text-[#EF4444] tracking-tighter">
           {currentDay}
         </div>
-        <div className="text-xl md:text-base lg:text-xl font-bold text-gray-800 mt-2">
+        <div className="text-xl md:text-sm lg:text-base min-[2000px]:text-xl font-bold text-gray-800 mt-2">
           {currentMonthYear}
         </div>
       </div>
