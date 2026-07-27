@@ -16,6 +16,9 @@ import { collection, addDoc, onSnapshot, query, doc, updateDoc, deleteDoc } from
 import { db } from "../../lib/firebase";
 
 export default function CalendarGrid() {
+  const { role, user, department } = useAuth();
+  const isReadOnly = role !== "dir";
+
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<"month" | "week">("month");
   const [exams, setExams] = useState<Exam[]>([]);
@@ -23,11 +26,8 @@ export default function CalendarGrid() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMultiSelectMode, setIsMultiSelectMode] = useState(false);
   const [selectedExam, setSelectedExam] = useState<Exam | null>(null);
-  const [activeTab, setActiveTab] = useState<"calendar" | "exams" | "trash">("exams");
+  const [activeTab, setActiveTab] = useState<"calendar" | "exams" | "trash">(role === "dir" ? "calendar" : "exams");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
-  const { role, user, department } = useAuth();
-  const isReadOnly = role !== "dir";
 
   const userLabs = useMemo(() => {
     if (!department) return [];
