@@ -92,8 +92,8 @@ export default function WeekView({ currentDate, exams, onDateClick, onEventClick
                     style={{ top: `${(idx + 1) * 30}px` }} // simple stagger
                   >
                     {isReadOnly 
-                      ? (exam.labs?.length ? exam.labs.join(", ") : "Occupied")
-                      : `${exam.examName} (${exam.shifts} shifts)${exam.labs?.length ? ` - ${exam.labs.join(", ")}` : ""}`
+                      ? `${exam.labs?.length ? exam.labs.join(", ") : "Occupied"}${exam.timing ? ` (${exam.timing})` : ""}`
+                      : `${exam.examName} (${exam.shifts} shifts)${exam.timing ? ` - ${exam.timing}` : ""}${exam.labs?.length ? ` - ${exam.labs.join(", ")}` : ""}`
                     }
                   </div>
                 ))}

@@ -107,20 +107,28 @@ export default function ExamListView({ exams, onEdit, onDelete, isReadOnly = fal
                 <div className="flex flex-col gap-2 md:gap-2.5 2xl:gap-3 flex-1">
                   <div className={`flex text-[10px] md:text-xs 2xl:text-sm font-bold text-gray-600 bg-[#F5F6F8] rounded-[10px] md:rounded-[12px] 2xl:rounded-[16px] px-2.5 md:px-3 2xl:px-4 py-2 md:py-2.5 2xl:py-3 ${isReadOnly ? 'items-start' : 'items-center'}`}>
                     {isReadOnly ? (
-                      <>
-                        <span className="material-symbols-outlined mr-2 md:mr-2.5 2xl:mr-3 mt-0.5 text-[#EF4444] shrink-0 text-[16px] md:text-[18px] 2xl:text-[20px]">desktop_mac</span>
-                        <div className="flex flex-wrap gap-1 md:gap-1.5 flex-1">
-                          {exam.labs?.length ? (
-                            exam.labs.map((lab) => (
-                              <span key={lab} className="px-1.5 py-0.5 md:px-2 md:py-1 2xl:px-2.5 2xl:py-1 text-[8px] md:text-[9px] 2xl:text-[11px] font-bold bg-white text-gray-700 rounded-[4px] md:rounded-[6px] 2xl:rounded-[8px] border border-gray-200 shadow-sm">
-                                {lab}
-                              </span>
-                            ))
-                          ) : (
-                            <span className="mt-0.5">Occupied</span>
-                          )}
+                      <div className="flex flex-col gap-1 w-full">
+                        <div className="flex items-start w-full">
+                          <span className="material-symbols-outlined mr-2 md:mr-2.5 2xl:mr-3 mt-0.5 text-[#EF4444] shrink-0 text-[16px] md:text-[18px] 2xl:text-[20px]">desktop_mac</span>
+                          <div className="flex flex-wrap gap-1 md:gap-1.5 flex-1">
+                            {exam.labs?.length ? (
+                              exam.labs.map((lab) => (
+                                <span key={lab} className="px-1.5 py-0.5 md:px-2 md:py-1 2xl:px-2.5 2xl:py-1 text-[8px] md:text-[9px] 2xl:text-[11px] font-bold bg-white text-gray-700 rounded-[4px] md:rounded-[6px] 2xl:rounded-[8px] border border-gray-200 shadow-sm">
+                                  {lab}
+                                </span>
+                              ))
+                            ) : (
+                              <span className="mt-0.5">Occupied</span>
+                            )}
+                          </div>
                         </div>
-                      </>
+                        {exam.timing && (
+                          <div className="flex items-center text-[#EF4444] mt-1 text-[10px] md:text-[11px] 2xl:text-xs font-bold capitalize">
+                            <Clock className="w-3 h-3 md:w-3.5 md:h-3.5 mr-1" />
+                            {exam.timing}
+                          </div>
+                        )}
+                      </div>
                     ) : (
                       <>
                         <CalendarIcon className="w-5 h-5 mr-3 text-[#EF4444] shrink-0" />
@@ -130,15 +138,21 @@ export default function ExamListView({ exams, onEdit, onDelete, isReadOnly = fal
                   </div>
 
                   {!isReadOnly && (
-                    <div className="flex gap-2 md:gap-2.5 2xl:gap-3">
-                      <div className="flex-1 flex items-center justify-center text-[10px] md:text-xs 2xl:text-sm font-bold text-gray-700 bg-red-50 rounded-[10px] md:rounded-[12px] 2xl:rounded-[16px] py-2 md:py-2.5 2xl:py-3 border border-red-100">
+                    <div className="flex flex-wrap gap-2 md:gap-2.5 2xl:gap-3">
+                      <div className="flex-1 min-w-[80px] flex items-center justify-center text-[10px] md:text-xs 2xl:text-sm font-bold text-gray-700 bg-red-50 rounded-[10px] md:rounded-[12px] 2xl:rounded-[16px] py-2 md:py-2.5 2xl:py-3 border border-red-100">
                         <Clock className="w-3 h-3 md:w-3.5 md:h-3.5 2xl:w-4 2xl:h-4 mr-1 md:mr-1.5 2xl:mr-2 text-[#EF4444]" />
                         {exam.shifts} Shift{exam.shifts !== 1 ? 's' : ''}
                       </div>
-                      <div className="flex-1 flex items-center justify-center text-[10px] md:text-xs 2xl:text-sm font-bold text-gray-700 bg-red-50 rounded-[10px] md:rounded-[12px] 2xl:rounded-[16px] py-2 md:py-2.5 2xl:py-3 border border-red-100">
+                      <div className="flex-1 min-w-[80px] flex items-center justify-center text-[10px] md:text-xs 2xl:text-sm font-bold text-gray-700 bg-red-50 rounded-[10px] md:rounded-[12px] 2xl:rounded-[16px] py-2 md:py-2.5 2xl:py-3 border border-red-100">
                         <Users className="w-3 h-3 md:w-3.5 md:h-3.5 2xl:w-4 2xl:h-4 mr-1 md:mr-1.5 2xl:mr-2 text-[#EF4444]" />
                         {exam.count} Systems
                       </div>
+                      {exam.timing && (
+                        <div className="flex-1 min-w-[80px] flex items-center justify-center text-[10px] md:text-xs 2xl:text-sm font-bold text-gray-700 bg-red-50 rounded-[10px] md:rounded-[12px] 2xl:rounded-[16px] py-2 md:py-2.5 2xl:py-3 border border-red-100 capitalize">
+                          <Clock className="w-3 h-3 md:w-3.5 md:h-3.5 2xl:w-4 2xl:h-4 mr-1 md:mr-1.5 2xl:mr-2 text-[#EF4444]" />
+                          {exam.timing}
+                        </div>
+                      )}
                     </div>
                   )}
 

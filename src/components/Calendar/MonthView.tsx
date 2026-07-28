@@ -84,6 +84,11 @@ export default function MonthView({ currentDate, exams, onDateClick, onEventClic
                     {exam.shifts} shifts
                   </span>
                 )}
+                {isReadOnly && exam.timing && (
+                  <span className="hidden md:block font-semibold text-[6.5px] md:text-[7px] 2xl:text-[10px] text-[#DC2626] truncate w-full leading-[1.1] mt-[1px] capitalize">
+                    {exam.timing}
+                  </span>
+                )}
               </div>
             ))}
           </div>
@@ -105,6 +110,12 @@ export default function MonthView({ currentDate, exams, onDateClick, onEventClic
                         <div className="flex justify-between items-center text-[13px] font-semibold text-[#DC2626]">
                           <span>{exam.shifts} Shifts</span>
                           <span>{exam.count} Systems</span>
+                          {exam.timing && <span className="capitalize">{exam.timing}</span>}
+                        </div>
+                      )}
+                      {isReadOnly && exam.timing && (
+                        <div className="text-[13px] font-semibold text-[#DC2626] capitalize">
+                          {exam.timing}
                         </div>
                       )}
                       {exam.labs && exam.labs.length > 0 && !isReadOnly && (
